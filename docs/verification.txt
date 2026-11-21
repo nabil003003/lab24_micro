@@ -1,0 +1,52 @@
+TP 24 : Conteneurisation Spring Angular
+Source : https://mliaedu.toubkalit.com/student/courses/7/labs/250
+Vérification réalisée le 21 novembre 2026.
+
+Les six étapes et les trois illustrations du cours sont extraites dans
+TP24-consignes.html. Le lab 247 correspond au TP 20, pas à ce travail.
+
+Application du lab
+- Structure Smart_Home_back et smartHome-front conservée.
+- Backend : compilation Maven, Java 17, image finale distincte.
+- Frontend : Dockerfile du cours conservé, Node 14.15.0 et Nginx.
+- Compose : mysql:latest, backend, frontend et phpmyadmin/phpmyadmin.
+- Ports finaux : MySQL 3306, Spring Boot 8085, Angular 80, phpMyAdmin 8081.
+- Base smart-house et identifiants MySQL root/root comme dans le cours.
+
+Corrections nécessaires par rapport aux exemples du cours
+- COPY --from=builder /app/target/app.jar /app.jar récupère le JAR construit
+  dans la première étape. Le COPY du cours cherche un JAR sur la machine hôte.
+- L'image finale utilise eclipse-temurin:17-jdk-alpine, déjà présente dans
+  le projet, pour exécuter le même Java 17.
+- Les tests Spring sont ignorés uniquement pendant la construction de l'image
+  (-DskipTests), car contextLoads nécessite une base MySQL active. Ils n'ont
+  pas été exécutés. La connexion réelle est vérifiée après démarrage Compose.
+- Le contrôle SHOW DATABASES est placé sur MySQL : l'image Java ne contient
+  pas /usr/bin/mysql. Le backend attend MySQL en état service_healthy.
+- La clé version obsolète de Compose n'est pas nécessaire.
+- Le cache Maven et les fichiers .dockerignore ne changent pas l'application.
+
+Résultats vérifiés
+- docker compose build : les deux images ont été construites avec succès.
+- docker compose up -d et docker compose ps : les quatre services sont Up,
+  MySQL est healthy, avec les ports du cours.
+- Spring Boot : démarrage terminé et connexion Hikari/MySQL établie.
+- Création de trois catégories depuis l'interface Angular.
+- Création de trois appareils de démonstration via l'API Spring Boot.
+- Switch All Off depuis Angular : les trois états false sont relus dans l'API.
+- États de démonstration rétablis : lampe et thermostat actifs, caméra inactive.
+- Aucune erreur JavaScript pendant ce parcours Angular.
+- Connexion réelle à phpMyAdmin : deux tables, trois lignes dans chacune.
+- Les trois PNG du README sont des captures du navigateur sur les services
+  locaux réels, sans interception réseau ni simulation de réponses.
+- Les images des appareils sont des icônes SVG de démonstration enregistrées
+  dans les fiches MySQL ; ce ne sont pas des photos de matériel réel.
+
+Le port 3306 était initialement occupé par XAMPP. Après son arrêt par
+l'utilisateur, MySQL a été replacé sur 3306. Le volume Docker existant a été
+conservé ; une sauvegarde SQL est disponible dans .lab-source/smart-house-backup.sql.
+
+La compilation Angular émet un avertissement de taille du bundle initial
+(884,66 kB pour un seuil d'avertissement de 500 kB), sans échec de compilation.
+
+Aucun résultat n'a été soumis sur la plateforme du cours.

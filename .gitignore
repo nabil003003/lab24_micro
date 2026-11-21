@@ -1,0 +1,7 @@
+.lab-source/
+.env
+**/node_modules/
+**/target/
+**/dist/
+**/.angular/
+**/.idea/
